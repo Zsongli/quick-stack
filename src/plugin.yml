@@ -1,0 +1,10 @@
+name: "QuickStack"
+version: 1.0
+author: "Zsong Lee"
+main: "li.zsong.quickstack.Plugin"
+api-version: 1.20
+commands:
+  quickstack:
+    description: "Use, configure or personalize Quick Stack."
+    usage: "Usage:\n/quickstack\n/quickstack range <value>\n/quickstack exclude this|<item>|list|clear"
+    aliases: ["qs"]
