@@ -22,6 +22,7 @@ public class ExcludedItemsStorage {
     public ExcludedItemsStorage(Player p, NamespacedKey key) {
         this.data = p.getPersistentDataContainer();
         this.player = p;
+        this.key = key;
 
         if (!this.data.has(key, PersistentDataType.STRING))
             this.data.set(key, PersistentDataType.STRING, "");

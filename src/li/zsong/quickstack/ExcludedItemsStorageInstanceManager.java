@@ -1,5 +1,6 @@
 package li.zsong.quickstack;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.bukkit.NamespacedKey;
@@ -13,8 +14,10 @@ public class ExcludedItemsStorageInstanceManager implements Listener {
     HashMap<String, ExcludedItemsStorage> instances = new HashMap<>();
     private NamespacedKey key;
 
-    public ExcludedItemsStorageInstanceManager(NamespacedKey storageKey) {
+    public ExcludedItemsStorageInstanceManager(Collection<? extends Player> initialPlayers, NamespacedKey storageKey) {
         this.key = storageKey;
+        for (var p : initialPlayers)
+            instances.put(p.getName(), new ExcludedItemsStorage(p, key));
     }
 
     public ExcludedItemsStorage getInstance(Player p) {

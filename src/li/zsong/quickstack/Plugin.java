@@ -1,5 +1,6 @@
 package li.zsong.quickstack;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,7 +23,7 @@ public class Plugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.excludedItemsStorageInstanceManager = new ExcludedItemsStorageInstanceManager(new NamespacedKey(this, "excludedItems"));
+        this.excludedItemsStorageInstanceManager = new ExcludedItemsStorageInstanceManager(Bukkit.getOnlinePlayers(), new NamespacedKey(this, "excludedItems"));
         getServer().getPluginManager().registerEvents(excludedItemsStorageInstanceManager, this);
         
         getCommand("quickstack").setExecutor(new QuickStackCommandExecutor(this));
