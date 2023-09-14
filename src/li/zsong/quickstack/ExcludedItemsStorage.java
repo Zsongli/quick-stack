@@ -14,21 +14,12 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class ExcludedItemsStorage {
 
-    private static NamespacedKey key;
-
-    static void setKey(NamespacedKey key) {
-        ExcludedItemsStorage.key = key;
-    }
-
     private PersistentDataContainer data;
     private Player player;
-    private ArrayList<Material> excludedItems = new ArrayList<>();
+    private ArrayList<Material> excludedItems;
+    private NamespacedKey key;
 
-    public ExcludedItemsStorage(Player p) {
-        if (key == null)
-            throw new IllegalStateException(
-                    "ExcludedItemsStorage.key must be set before creating an instance of ExcludedItemsStorage");
-
+    public ExcludedItemsStorage(Player p, NamespacedKey key) {
         this.data = p.getPersistentDataContainer();
         this.player = p;
 

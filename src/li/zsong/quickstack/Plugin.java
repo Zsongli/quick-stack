@@ -15,12 +15,17 @@ public class Plugin extends JavaPlugin {
         return getMessagePrefix() + message;
     }
 
+    ExcludedItemsStorageInstanceManager excludedItemsStorageInstanceManager;
+    public ExcludedItemsStorageInstanceManager getExcludedItemsStorageInstanceManager() {
+        return excludedItemsStorageInstanceManager;
+    }
+
     @Override
     public void onEnable() {
+        this.excludedItemsStorageInstanceManager = new ExcludedItemsStorageInstanceManager(new NamespacedKey(this, "excludedItems"));
+        getServer().getPluginManager().registerEvents(excludedItemsStorageInstanceManager, this);
+        
         getCommand("quickstack").setExecutor(new QuickStackCommandExecutor(this));
-
-        ExcludedItemsStorage.setKey(new NamespacedKey(this, "excludedItems"));
-        getServer().getPluginManager().registerEvents(new ExcludedItemsStorageInstanceManager(), this);
 
         getServer().getConsoleSender()
                 .sendMessage(getMessagePrefix() + "Plugin loaded!");

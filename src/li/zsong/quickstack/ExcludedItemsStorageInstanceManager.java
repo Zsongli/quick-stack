@@ -2,6 +2,7 @@ package li.zsong.quickstack;
 
 import java.util.HashMap;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,9 +10,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class ExcludedItemsStorageInstanceManager implements Listener {
-    static HashMap<String, ExcludedItemsStorage> instances = new HashMap<>();
+    HashMap<String, ExcludedItemsStorage> instances = new HashMap<>();
+    private NamespacedKey key;
 
-    public static ExcludedItemsStorage getInstance(Player p) {
+    public ExcludedItemsStorageInstanceManager(NamespacedKey storageKey) {
+        this.key = storageKey;
+    }
+
+    public ExcludedItemsStorage getInstance(Player p) {
         if (instances.containsKey(p.getName()))
             return instances.get(p.getName());
         else
@@ -21,7 +27,7 @@ public class ExcludedItemsStorageInstanceManager implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        instances.put(e.getPlayer().getName(), new ExcludedItemsStorage(e.getPlayer()));
+        instances.put(e.getPlayer().getName(), new ExcludedItemsStorage(e.getPlayer(), key));
     }
 
     @EventHandler
