@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
@@ -127,7 +128,7 @@ public class QuickStackCommandExecutor implements CommandExecutor {
                         return true;
                     }
 
-                    var excludedItems = ExcludedItemsStorageInstanceManager.getInstance(player);
+                    var excludedItems = plugin.getExcludedItemsStorageInstanceManager().getInstance(player);
 
                     if (args[1].equals("list")) { // /quickstack exclude list
                         final var nl = "\n"; // to supress warning
@@ -175,8 +176,10 @@ public class QuickStackCommandExecutor implements CommandExecutor {
             return true;
         }
 
-        if (!(sender instanceof Player player))
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(ChatColor.RED + "You must be a player to use this command!");
             return true;
+        }
 
         if (!plugin.getConfig().contains("range"))
             plugin.getConfig().set("range", 8);
@@ -195,38 +198,48 @@ public class QuickStackCommandExecutor implements CommandExecutor {
             for (int y = radius; y >= -radius; y--) {
                 for (int z = radius; z >= -radius; z--) {
                     var block = player.getWorld().getBlockAt(player.getLocation().add(x, y, z));
-                    if (block.getType() != Material.CHEST)
-                        continue;
+                    if (block.getType() == Material.CHEST) {
 
-                    var someChestBlock = (Chest) block.getState();
-                    var someChestInventoryHolder = someChestBlock.getInventory().getHolder();
+                        var someChestBlock = (Chest) block.getState();
+                        var someChestInventoryHolder = someChestBlock.getInventory().getHolder();
 
-                    if (!canPlayerSeeBlock(player, block, radius))
-                        continue;
-
-                    if (someChestInventoryHolder instanceof DoubleChest) {
-                        var doubleChest = (DoubleChest) someChestInventoryHolder; // here we cast to DoubleChest so
-                                                                                  // getLocation returns
-                        // the average of the two locations
-                        if (chests.containsKey(doubleChest.getLocation().toVector()))
+                        if (!canPlayerSeeBlock(player, block, radius))
                             continue;
-                        chests.put(doubleChest.getLocation().toVector(), doubleChest.getInventory());
-                    } else {
-                        var chest = (Chest) someChestInventoryHolder;
-                        if (chests.containsKey(chest.getLocation().toVector()))
+
+                        if (someChestInventoryHolder instanceof DoubleChest) {
+                            var doubleChest = (DoubleChest) someChestInventoryHolder; // here we cast to DoubleChest so
+                            // getLocation returns
+                            // the average of the two locations
+                            if (chests.containsKey(doubleChest.getLocation().toVector()))
+                                continue;
+                            chests.put(doubleChest.getLocation().toVector(), doubleChest.getInventory());
+                        } else {
+                            var chest = (Chest) someChestInventoryHolder;
+                            if (chests.containsKey(chest.getLocation().toVector()))
+                                continue;
+                            chests.put(chest.getLocation().toVector(), chest.getInventory());
+                        }
+
+                    } else if (block.getType() == Material.BARREL) {
+                        var barrel = (Barrel) block.getState();
+
+                        if (!canPlayerSeeBlock(player, block, radius))
                             continue;
-                        chests.put(chest.getLocation().toVector(), chest.getInventory());
+
+                        if (chests.containsKey(barrel.getLocation().toVector()))
+                            continue;
+                        chests.put(barrel.getLocation().toVector(), barrel.getInventory());
                     }
                 }
             }
         }
 
         var sortedChests = chests.values().stream()
-                .sorted((a, b) -> Double.compare(a.getLocation().distance(player.getLocation()),
-                        b.getLocation().distance(player.getLocation())))
+                .sorted((a, b) -> Double.compare(a.getLocation().distanceSquared(player.getLocation()),
+                        b.getLocation().distanceSquared(player.getLocation())))
                 .toList(); // prioritize chests closer to player in case of multiple options
 
-        var excludedItems = ExcludedItemsStorageInstanceManager.getInstance(player);
+        var excludedItems = plugin.getExcludedItemsStorageInstanceManager().getInstance(player);
         var inventory = player.getInventory();
         int count = 0; // number of item stacks that quick stack had an effect on
 
