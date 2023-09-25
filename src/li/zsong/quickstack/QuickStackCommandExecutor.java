@@ -263,7 +263,7 @@ public class QuickStackCommandExecutor implements CommandExecutor {
 
                 boolean containsItem = false;
                 for (var stackInChest : chest) { // try to fit the item into existing stacks
-                    if (stackInChest == null || stackInChest.getType() != stack.getType())
+                    if (stackInChest == null || !stackInChest.isSimilar(stack))
                         continue;
 
                     containsItem = true;
@@ -288,7 +288,8 @@ public class QuickStackCommandExecutor implements CommandExecutor {
                     var fitsInStack = Math.min(stack.getMaxStackSize(), chest.getMaxStackSize());
                     var amountToStore = Math.min(fitsInStack, itemsToStore);
 
-                    var newStack = new ItemStack(stack.getType(), amountToStore);
+                    var newStack = new ItemStack(stack); // copy metadata (enchantments, etc.)
+                    newStack.setAmount(amountToStore);
                     chest.setItem(j, newStack);
 
                     itemsToStore -= amountToStore;
