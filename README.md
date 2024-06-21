@@ -2,7 +2,7 @@
 A simple stack implementation in C  
 just kidding, github copilot generated that
 
-A Spigot plugin for Minecraft 1.20.1 that tries to mimic Terraria's *"quick stack to nearby chests"* button to help Minecraft get one step closer to being as good as Terraria. (magic mirror next pls)
+A Spigot plugin for Minecraft that tries to mimic Terraria's *"quick stack to nearby chests"* button to help Minecraft get one step closer to being as good as Terraria. (magic mirror next pls)
 
 ## Usage
 Put the .jar file in your plugins folder first.
