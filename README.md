@@ -9,10 +9,10 @@ Put the .jar file in your plugins folder first.
 ### Configuring range
 You will need the permission called `quickstack.range`, or operator privileges.  
 To set the range, use the command `/qs range <value>`. The value is in blocks, and the default is 8.  
-The plugin will use this value as the radius of a ~~sphere~~ cube around the player, and will try to find **regular** chests within that sphere. Neither trapped nor ender chests work as of now.
+The plugin will use this value as the radius of a ~~sphere~~ cube around the player, and will try to find **regular** chests (or barrels) within. Neither trapped nor ender chests work as of now.
 ### Excluding types of items
 You don't need any permissions to do this, because it's just a personal setting that only matters when the quick stacking feature is used.  
-- To toggle exclusion of a type of item (that's how far the plugins differentiation between items logic goes), use the command `/qs exclude <item>`. Provide the item's ID as it appears in any regular command, for example `minecraft:stone` or `minecraft:iron_ingot`. You may skip the `minecraft:` part if you want.  
+- To toggle exclusion of a type of item (that's how far the plugin's differentiation between items logic goes), use the command `/qs exclude <item>`. Provide the item's ID as it appears in any regular command, for example `minecraft:stone` or `minecraft:iron_ingot`. You may skip the `minecraft:` part if you want.  
 - To exclude the type of item you're currently holding, use `/qs exclude this`.  
 - To view the list of the types of items you've excluded so far, use `/qs exclude list`.  
 - To clear the list of excluded items, use `/qs exclude clear`.
